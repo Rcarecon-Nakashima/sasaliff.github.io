@@ -21,27 +21,38 @@
   </style>
 </head>
 <body>
-  <h1>LINEミニアプリ サンプル</h1>
+  <h1>LINEアプリ サンプル</h1>
 
   <p id="status">初期化中...</p>
 
-  <div id="user-area" style="display:none;">
-    <p>名前: <span id="name"></span></p>
-    <img id="picture" width="80" />
+  <div id="user-area" >
+    種別<select id="apply_type">
+		<option value="paid_holiday" selected>有給</option>
+		<option value="paid_holiday_half">有給(半日)</option>
+		<option value="absent">欠勤</option>
+		<option value="leave_early">早退</option>
+		<option value="late">遅刻</option>
+		<option value="substitute">振替休日</option>
+	</select>
+	日付<input type="date" id="apply_date">
+	開始時間<input type="time" id="start_time" value="08:00">
+	終了時間<input type="time" id="end_time" value="17:00">
+	振替元労働日<input type="date" id="substitute_date" >
+	理由<input type="text" id="reason">
   </div>
 
-  <button id="sendBtn">トークにメッセージ送信</button>
+  <button id="sendBtn">送信</button>
 
   <script>
 const LIFF_ID = "2008919758-4K6uwRBN"; // ← LINE Developersで発行したLIFF ID
 alert( liff);
 async function init() {
   try {
-    alert(`isInClient ${liff.isInClient()}`);
-    alert(`env ${liff.getOS()} ${liff.getLanguage()}`);
-    alert("ログイン実行");
+    //alert(`isInClient ${liff.isInClient()}`);
+    //alert(`env ${liff.getOS()} ${liff.getLanguage()}`);
+    //alert("ログイン実行");
     await liff.init({ liffId: LIFF_ID });
-    alert("ログイン終了");
+    //alert("ログイン終了");
     document.getElementById("status").textContent = "初期化完了";
 
     if (!liff.isLoggedIn()) {
@@ -82,6 +93,28 @@ async function sendMessage() {
 }
 
 init();
+	
+	document.getElementById("apply_type").addEventListener("onChange",function(e){
+		document.getElementById("start_time").visibility = false;
+		document.getElementById("end_time").visibility = false;				
+		document.getElementById("substitute_date").visibility = false;
+		switch(e.target.value){
+			"substitute" : 
+				document.getElementById("substitute_date").visibility = true;
+				break;
+			"late":
+			"leave_early":
+				document.getElementById("start_time").visibility = true;
+				document.getElementById("end_time").visibility = true;
+				break;
+		}
+		return true;
+	});
+	document.getElementById("start_time").visibility = false;
+	document.getElementById("end_time").visibility = false;				
+	document.getElementById("substitute_date").visibility = false;
+	
+
   </script>
 </body>
 </html>

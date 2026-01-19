@@ -17,15 +17,24 @@
     button {
       padding: 12px 16px;
       font-size: 16px;
+	  font-weight: bold;
     }
+	div {
+	  font-size: 20px;
+	}
+	select {
+	  font-size: 20px;
+	}
+	input {
+	  font-size: 20px;
+	  width: 100%
+	}
   </style>
 </head>
 <body>
   <h1>LINEアプリ サンプル</h1>
 
-  <p id="status">初期化中...</p>
-
-  <div id="user-area" >
+  <div id="user-area" style="display:flex;flex-direction:column;">
     種別<select id="apply_type">
 		<option value="paid_holiday" selected>有給</option>
 		<option value="paid_holiday_half">有給(半日)</option>
@@ -35,17 +44,17 @@
 		<option value="substitute">振替休日</option>
 	</select>
 	日付<input type="date" id="apply_date">
-	開始時間<input type="time" id="start_time" value="08:00">
-	終了時間<input type="time" id="end_time" value="17:00">
-	振替元労働日<input type="date" id="substitute_date" >
+	<span id="start_time">開始時間</br><input type="time" id="start_time_input" value="08:00"></span>
+	<span id="end_time">終了時間</br><input type="time" id="end_time_input" value="17:00"></span>
+	<span id="substitute_date">振替元労働日</br><input type="date" id="substitute_date_input" ></span>
 	理由<input type="text" id="reason">
   </div>
-
-  <button id="sendBtn">送信</button>
-
+	<p>
+	<button style="" id="sendBtn">送信</button>
+	</p>
   <script>
 const LIFF_ID = "2008919758-4K6uwRBN"; // ← LINE Developersで発行したLIFF ID
-alert( liff);
+
 async function init() {
   try {
     //alert(`isInClient ${liff.isInClient()}`);
@@ -53,26 +62,12 @@ async function init() {
     //alert("ログイン実行");
     await liff.init({ liffId: LIFF_ID });
     //alert("ログイン終了");
-    document.getElementById("status").textContent = "初期化完了";
-
-    if (!liff.isLoggedIn()) {
-      alert("ログインしてない");
-      liff.login();
-      return;
-    }
-
-    // プロフィール取得
-    const profile = await liff.getProfile();
-    document.getElementById("name").textContent = profile.displayName;
-    document.getElementById("picture").src = profile.pictureUrl;
-    document.getElementById("user-area").style.display = "block";
 
     // ボタンイベント
     document.getElementById("sendBtn").addEventListener("click", sendMessage);
 
   } catch (err) {
     alert(err);
-    document.getElementById("status").textContent = "エラー発生";
   }
 }
 
@@ -94,25 +89,25 @@ async function sendMessage() {
 
 init();
 	
-	document.getElementById("apply_type").addEventListener("onChange",function(e){
-		document.getElementById("start_time").visibility = false;
-		document.getElementById("end_time").visibility = false;				
-		document.getElementById("substitute_date").visibility = false;
+	document.getElementById("apply_type").addEventListener("change",function(e){
+		document.getElementById("start_time").style.visibility = "hidden";
+		document.getElementById("end_time").style.visibility = "hidden";				
+		document.getElementById("substitute_date").style.visibility = "hidden";
 		switch(e.target.value){
 			case "substitute" : 
-				document.getElementById("substitute_date").visibility = true;
+				document.getElementById("substitute_date").style.visibility = "visible";
 				break;
 			case "late":
 			case "leave_early":
-				document.getElementById("start_time").visibility = true;
-				document.getElementById("end_time").visibility = true;
+				document.getElementById("start_time").style.visibility = "visible";
+				document.getElementById("end_time").style.visibility = "visible";
 				break;
 		}
 		return true;
 	});
-	document.getElementById("start_time").visibility = false;
-	document.getElementById("end_time").visibility = false;				
-	document.getElementById("substitute_date").visibility = false;
+	document.getElementById("start_time").style.visibility = "hidden";
+	document.getElementById("end_time").style.visibility = "hidden";				
+	document.getElementById("substitute_date").style.visibility = "hidden";
 	
 
   </script>

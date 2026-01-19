@@ -99,11 +99,11 @@ init();
 		document.getElementById("end_time").visibility = false;				
 		document.getElementById("substitute_date").visibility = false;
 		switch(e.target.value){
-			"substitute" : 
+			case "substitute" : 
 				document.getElementById("substitute_date").visibility = true;
 				break;
-			"late":
-			"leave_early":
+			case "late":
+			case "leave_early":
 				document.getElementById("start_time").visibility = true;
 				document.getElementById("end_time").visibility = true;
 				break;

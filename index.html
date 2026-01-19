@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>LINEミニアプリ サンプル</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- LIFF SDK -->
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script defer src="./main.js"></script>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 16px;
+    }
+    button {
+      padding: 12px 16px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>LINEミニアプリ サンプル</h1>
+
+  <p id="status">初期化中...</p>
+
+  <div id="user-area" style="display:none;">
+    <p>名前: <span id="name"></span></p>
+    <img id="picture" width="80" />
+  </div>
+
+  <button id="sendBtn">トークにメッセージ送信</button>
+
+  <script>
+const LIFF_ID = "2008919758-4K6uwRBN"; // ← LINE Developersで発行したLIFF ID
+alert( liff);
+async function init() {
+  try {
+    alert(`isInClient ${liff.isInClient()}`);
+    alert(`env ${liff.getOS()} ${liff.getLanguage()}`);
+    alert("ログイン実行");
+    await liff.init({ liffId: LIFF_ID });
+    alert("ログイン終了");
+    document.getElementById("status").textContent = "初期化完了";
+
+    if (!liff.isLoggedIn()) {
+      alert("ログインしてない");
+      liff.login();
+      return;
+    }
+
+    // プロフィール取得
+    const profile = await liff.getProfile();
+    document.getElementById("name").textContent = profile.displayName;
+    document.getElementById("picture").src = profile.pictureUrl;
+    document.getElementById("user-area").style.display = "block";
+
+    // ボタンイベント
+    document.getElementById("sendBtn").addEventListener("click", sendMessage);
+
+  } catch (err) {
+    alert(err);
+    document.getElementById("status").textContent = "エラー発生";
+  }
+}
+
+async function sendMessage() {
+  if (!liff.isInClient()) {
+    alert("LINEアプリ内でのみ実行できます");
+    return;
+  }
+
+  await liff.sendMessages([
+    {
+      type: "text",
+      text: "LINEミニアプリから送信しました！"
+    }
+  ]);
+
+  alert("送信しました");
+}
+
+init();
+  </script>
+</body>
+</html>
